@@ -16,65 +16,156 @@
 public class Manager {
 
     //data fields salesArray is type Sales to hold sales objects created
-    private Sales[] salesArray = new Sales[10];
+    private Sales[] tickeSalesArray = new Ticket[10];
+    private Sales[] snackSalesArray = new Snack[10];
+    
     //data field salesObjectCounter is to count number of sales objects to be created
-    private int salesObjectCounter = 0;
-
-    //input is passed to method createSale() when'Submit Sale' button is pressed
-    public void createSale(String name, double price, int quantity) {
-        //sales object is created and stored in sales array at position salesObjectCounter 
-        salesArray[salesObjectCounter] = new Sales(name, price, quantity);
+    private int ticketObjectCounter= 0;
+    private int snackObjectCounter= 0;
+     
+     //input is passed to method createTicketSale() when'Submit Sale' button is pressed
+    public void createTicketSale(String name, double price, int quantity) {
+        //sales object is created and stored in sales array at position salesObjectCounter
+    	
+        tickeSalesArray[ticketObjectCounter] = new Ticket(name, price, quantity);
+        
+    	}
+    	 
+  //input is passed to method createTicketSale() when'Submit Sale' button is pressed
+    public void createSnackSale(String name, double price, int quantity) {
+        //sales object is created and stored in sales array at position salesObjectCounter
+    	
+        snackSalesArray[snackObjectCounter] = new Snack(name, price, quantity);
+       
+    	
     }
+    
 
     //return the last sale we created in string form.
     //this will be used in 'submit sale' button
-    public String returnLastSaleOutput() {
+    public String returnLastTicketSale() {
+    	
         //method toString() is called to return string representation of
         //sales object at salesObjectCounter position.
-        String temp = salesArray[salesObjectCounter].toString();
+    		 
+        String currentTicket = tickeSalesArray[ticketObjectCounter].toString();
+        
+        ticketObjectCounter++;
+        
+        return currentTicket;
+    	}
+    
+    public String returnLastSnackSale() {
+      //method toString() is called to return string representation of
+        //sales object at salesObjectCounter position.
+    		
+        String currentSnack = snackSalesArray[snackObjectCounter].toString();
 
         //sales object is increased
-        salesObjectCounter++;
+        snackObjectCounter++;
         //string representation of sales object is returned.
-        return temp;
-    }
-
-    //method calculateTotalPrice() will add up the sale price of each sale and
-    //return the total value in string form.
-    public String calculateTotalPrice() {
-        //temp and total are local variables
-        String temp = "\n  Date: " + salesArray[0].getSalesDate() + "\nTotal Sales: $";
-        double total = 0;
+        return currentSnack;
+       }
+    
+  //method listAllSales() prints a short list of each sales created.
+    public String listAllTicketSales() {
+    	
+    	//if (ticketStatus == 'Y') {
+        //listTicket is local variable
+        String listOfTickets = "\n  Ticket sale Listing:\n";
         //for statement goes through salesArray based on number of sales objects 
         //been created, which is salesObjectCounter number of time.
-        for (int i = 0; i < salesObjectCounter; i++) {
+        for (int i = 0; i < ticketObjectCounter; i++) {
+            //methods getName() and getQuantity are called from Sales class.
+            //each sales name and quantity are retrieved and assigned to listTicket.
+            listOfTickets += "Sale " + (i + 1) + ": " + tickeSalesArray[i].getName() +
+                ", Amount Sold: " + tickeSalesArray[i].getQuantity() + "\n";
+        }
+        //string representation of short list of each ticket sales are returned.
+        return listOfTickets;
+    	
+    	
+    }
+    
+  //method listAllSales() prints a short list of each sales created.
+    public String listAllSnackSales() {
+    	
+       	//listTicket is local variable
+        String listOfSnacks = "\n  Snack sale Listing:\n";
+        //for statement goes through salesArray based on number of sales objects 
+        //been created, which is salesObjectCounter number of time.
+        for (int i = 0; i < snackObjectCounter; i++) {
+            //methods getName() and getQuantity are called from Sales class.
+            //each sales name and quantity are retrieved and assigned to listSnack.
+             listOfSnacks += "Sale " + (i + 1) + ": " + snackSalesArray[i].getName() +
+                ", Amount Sold: " + snackSalesArray[i].getQuantity() + "\n";
+        }
+        //string representation of short list of each snack sales are returned.
+          return listOfSnacks;
+    	
+    	
+    }
+    	
+    
+    //method calculateTotalPrice() will add up the sale price of each sale and
+    //return the total value in string form.
+    public String calculateTotalSales() {
+        //totalSales and total are local variables
+        String totalSales = ""; 
+        double ticketTotal = 0;
+        double snackTotal=0;
+        //for statement goes through salesArray based on number of sales objects 
+        //been created, which is salesObjectCounter number of time.
+        if(tickeSalesArray[0] != null) {
+        for (int i = 0; i < ticketObjectCounter; i++) {
             //method calculatePrice() from Sales class is called
             //to calculate each sale in salesArray position (i).
             //the entire sales are added and the value is assigned to total.
-            total += salesArray[i].calculatePrice();
+            ticketTotal += tickeSalesArray[i].calculatePrice();
         }
-        //string representation of total sale is returned.
-        temp += total;
-        temp += "\n";
-        return temp;
-    }
-
-    //method listAllSales() prints a short list of each sales created.
-    public String listAllSales() {
-        //temp is local variable
-        String temp = "\n  Sales Listing:\n";
-        //for statement goes through salesArray based on number of sales objects 
+        
+        }
+        
+        if(snackSalesArray[0] != null) {
+      //for statement goes through salesArray based on number of sales objects 
         //been created, which is salesObjectCounter number of time.
-        for (int i = 0; i < salesObjectCounter; i++) {
-            //methods getName() and getQuantity are called from Sales class.
-            //each sales name and quantity are retrieved and assigned to temp.
-            temp += "Sale " + (i + 1) + ": " + salesArray[i].getName() +
-                ", Amount Sold: " + salesArray[i].getQuantity() + "\n";
+        for (int i = 0; i < snackObjectCounter; i++) {
+            //method calculatePrice() from Sales class is called
+            //to calculate each sale in salesArray position (i).
+            //the entire sales are added and the value is assigned to total.
+            snackTotal += snackSalesArray[i].calculatePrice();
         }
-        //string representation of short list of each sales are returned.
-        return temp;
-
+        
+        
+        }
+        totalSales= "\n\nDate of Sales: " + tickeSalesArray[0].getSalesDate() + "\nList of Sales: \n";
+        //string representation of total sale is returned.
+        totalSales += "  Tickets:\t$" + ticketTotal + " \n";
+        
+        totalSales += "  Snacks:\t$" + snackTotal + " \n";
+        
+        totalSales += "  Total Sales:\t$" + (ticketTotal + snackTotal) + " \n";
+        
+        
+        totalSales += "\n";
+        return totalSales;
     }
 
+    
+    public String getChocoalteSnacks() {
+    	
+    	String tempSnack= "\n  List of Chocolate snacks:\n";
+    	for (int i = 0; i < snackObjectCounter; i++) {
+            //methods getName() and getQuantity are called from Sales class.
+            //each sales name and quantity are retrieved and assigned to listSnack.
+    		String temp= snackSalesArray[i].getName();
+    		boolean b = temp.matches("(?i).*CHOCOLATE.*");
+    		if(b == true) {
+            tempSnack += temp + "\n";
+    		}
+        }
+    	
+    	return tempSnack;
+    }
 
 }

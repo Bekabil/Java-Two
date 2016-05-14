@@ -12,14 +12,17 @@
  *
  */
 //imports classes from java AWT
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 import java.awt.event.*;
 
+import javax.swing.ButtonGroup;
 //import classes from javax swing
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -34,28 +37,45 @@ public class MovieTheater extends JFrame {
     private JLabel jlblName = new JLabel("Item Name:");
     private JTextField jtxtName = new JTextField(15);
 
-    private JLabel jlblPrice = new JLabel("Item Price:");
+    private JLabel jlblPrice = new JLabel("Price:");
     private JTextField jtxtPrice = new JTextField(4);
 
     private JLabel jlblQuantity = new JLabel("Quantity:");
     private JTextField jtxtQuantity = new JTextField(3);
 
-    private JLabel jlblbtn = new JLabel("Submit Button:");
-    private JButton jbtnSubmit = new JButton("Submit Sale");
-
-    private JButton jbtnListSales = new JButton("List All Sales");
-    private JButton jbtnCalculateTotalPrice = new JButton("Calculate Total Price");
+    private JLabel jlblbtn = new JLabel("Submit:");
+    private JButton jbtnSubmit = new JButton("Submit Information");
     
-    private JScrollBar jscbVert= new JScrollBar(JScrollBar.VERTICAL);
+    private JLabel jlblSalesType = new JLabel("Sales Type:");
+    
 
+    private JButton jbtnSnackSales = new JButton("List All Snack Sales");
+    private JButton jbtnTicketSales = new JButton("List All Ticket Sales");
+    private JButton jbtnListChocolateSnacks = new JButton("List Chocolate Snacks");
+    
+    private JButton jbtnCalculateTotalSales = new JButton("Total Price");
+    
+    private JRadioButton jrbTicket = new JRadioButton("Ticket");
+    private JRadioButton jrbSnack = new JRadioButton("Snack");
+    private ButtonGroup groupSales = new ButtonGroup();
+    
+    
     //text area is created to be used for outputs
     private JTextArea jtxtSalesOutput = new JTextArea(4, 4);
+      
+    //jscrollPane is type JScrollPane
+    //jtxtSalesOutput is passed to constructor
+    private JScrollPane jscrollPane= new JScrollPane(jtxtSalesOutput);
 
     //manageTicketSold is an instance of Manager
     private Manager manageTicketSold = new Manager();
 
     //constructor MovieTickets
     public MovieTheater() {
+    	
+    	//create JPanel groupPanel
+    	JPanel groupPanel = new JPanel(new GridLayout(2,1));
+    	
         //create JPanel itemsPanel
         JPanel itemsPanel = new JPanel();
 
@@ -64,47 +84,48 @@ public class MovieTheater extends JFrame {
 
         //set GridLayout 4 rows, 2 columns, and gaps 5 between
         //components horizontally and vertically
-        itemsPanel.setLayout(new GridLayout(5, 2, 5, 5));
+        itemsPanel.setLayout(new GridLayout(7, 4, 3, 3));
 
-        //add components to itemsPanel
+        //add components to itemsPanel, groupPanel, and salesPanel
+        //groupPanel.add(jlblSalesType);
+       
+        groupPanel.add(jrbTicket);
+        groupPanel.add(jrbSnack);
+        groupSales.add(jrbSnack);
+        groupSales.add(jrbTicket);
+        
+        itemsPanel.add(jlblSalesType);
+        itemsPanel.add(groupPanel);
+        
         itemsPanel.add(jlblName);
         itemsPanel.add(jtxtName);
+        
         itemsPanel.add(jlblPrice);
         itemsPanel.add(jtxtPrice);
+        
         itemsPanel.add(jlblQuantity);
         itemsPanel.add(jtxtQuantity);
+        
         itemsPanel.add(jlblbtn);
         itemsPanel.add(jbtnSubmit);
-        itemsPanel.add(jbtnListSales);
-        itemsPanel.add(jbtnCalculateTotalPrice);
         
+        itemsPanel.add(jbtnSnackSales);
+        itemsPanel.add(jbtnTicketSales);
+        itemsPanel.add(jbtnListChocolateSnacks);
+        itemsPanel.add(jbtnCalculateTotalSales);
         
+        //salesPanel.add(groupPanel, BorderLayout.NORTH);
+        //salesPanel.add(groupPanel, BorderLayout.WEST);
         
         //add itemPanel on to salesPanel panel and place it in south 
         salesPanel.add(itemsPanel, BorderLayout.NORTH);
+                                       
+        //add jscrollPane to salesPanel and place it in the center	
+        //jscrollPane is holding jtxtSalesOutput area                             
+        salesPanel.add(jscrollPane, BorderLayout.CENTER);
         
-       
-
-        
-        
-        
-
-        //add jtxtSalesOutput to salesPanel and place it in the center	
-        //salesPanel.add(jtxtSalesOutput, BorderLayout.CENTER);
-        
-        
-        
-        salesPanel.add(jscbVert, BorderLayout.EAST);
-        
-        
-        salesPanel.add(jtxtSalesOutput, BorderLayout.CENTER);
-        
-        jtxtSalesOutput.add(jscbVert);
-        
-        
-        
-
-        //add salesPanel panel to the frame.
+                       
+         //add salesPanel panel to the frame.
         add(salesPanel);
 
         //text area for output is not editable.
@@ -118,15 +139,26 @@ public class MovieTheater extends JFrame {
 
         //create listener object of type PressedButtonListener to use it for calculate total price button.
         PressedButtonListener calculateTotalPriceButtonListener = new PressedButtonListener();
+        
+      //create listener object of type PressedButtonListener to use it for calculate total price button.
+        PressedButtonListener listAllChocolateSnacksButtonListener = new PressedButtonListener();
+        
+        
 
         //register listener onto jbtnSubmit button
         jbtnSubmit.addActionListener(submitButtonListener);
+        
+      //register listener onto jbtnListSales button.
+        jbtnSnackSales.addActionListener(listAllSalesButtonListener);
 
         //register listener onto jbtnListSales button.
-        jbtnListSales.addActionListener(listAllSalesButtonListener);
+        jbtnTicketSales.addActionListener(listAllSalesButtonListener);
 
         //register listener onto jbtnCalculateTotalPrice button.
-        jbtnCalculateTotalPrice.addActionListener(calculateTotalPriceButtonListener);
+        jbtnCalculateTotalSales.addActionListener(calculateTotalPriceButtonListener);
+        
+        //register listener onto jbtnListChocolateSnacks button.
+        jbtnListChocolateSnacks.addActionListener(listAllChocolateSnacksButtonListener);
 
     }
 
@@ -138,30 +170,81 @@ public class MovieTheater extends JFrame {
         @
         Override
         public void actionPerformed(ActionEvent event) {
+        	
 
             //if jbtnSubmit button is pressed
             //createSale() method is called.
             //movie name, price, and quantity is entered by user and passed as an argument.      	
-            if (event.getSource() == jbtnSubmit) {
-                manageTicketSold.createSale(jtxtName.getText(), Double.parseDouble(jtxtPrice.getText()),
+            if (event.getSource() == jbtnSubmit && jrbTicket.isSelected()) {
+            	
+            		 //manageTicketSold.ticket++;
+            		 //manageTicketSold.snack= 'N';
+            		 
+                manageTicketSold.createTicketSale(jtxtName.getText(), Double.parseDouble(jtxtPrice.getText()),
                     Integer.parseInt(jtxtQuantity.getText()));
 
                 //method returnLastSaleOutput() is called.
                 //last sale information is printed out to text area.
-                jtxtSalesOutput.append(manageTicketSold.returnLastSaleOutput());
+                jtxtSalesOutput.append(manageTicketSold.returnLastTicketSale());
+                
+               // manageTicketSold.ticket= 0;
+                
             }
-            //jbtnListSales button is pressed
+            
+          //if jbtnSubmit button is pressed
+            //createSale() method is called.
+            //movie name, price, and quantity is entered by user and passed as an argument.      	
+            if (event.getSource() == jbtnSubmit && jrbSnack.isSelected()) {
+            	
+            	 //manageTicketSold.snack++;
+            	 //manageTicketSold.ticket= 'N';
+            		             		             		             		 
+                manageTicketSold.createSnackSale(jtxtName.getText(), Double.parseDouble(jtxtPrice.getText()),
+                    Integer.parseInt(jtxtQuantity.getText()));
+
+                //method returnLastSaleOutput() is called.
+                //last sale information is printed out to text area.
+                jtxtSalesOutput.append(manageTicketSold.returnLastSnackSale());
+                
+               // manageTicketSold.snack= 0;
+            }
+            
+            //jbtnTicketSales button is pressed
             //method listAllSales() is called.
             //all sales information are printed out to text area.
-            else if (event.getSource() == jbtnListSales) {
-                String temp = manageTicketSold.listAllSales();
+             if (event.getSource() == jbtnTicketSales) {
+            	//manageTicketSold.ticketStatus = 'Y';
+                String temp = manageTicketSold.listAllTicketSales();
                 jtxtSalesOutput.append(temp);
+                
+                //manageTicketSold.ticketStatus = 'N';
+            	
             }
+           //jbtnSnackSales button is pressed
+             //method listAllSales() is called.
+             //all sales information are printed out to text area.
+             if (event.getSource() == jbtnSnackSales) {
+            	 //manageTicketSold.snackStatus = 'Y';
+                 String temp = manageTicketSold.listAllSnackSales();
+                 jtxtSalesOutput.append(temp);
+                 
+                // manageTicketSold.snackStatus = 'N';
+            	 
+             }
+            //jbtnSnackSales button is pressed
+              //method listAllSales() is called.
+              //all sales information are printed out to text area.
+              if (event.getSource() == jbtnListChocolateSnacks) {
+             	  
+                  String temp = manageTicketSold.getChocoalteSnacks();
+                  jtxtSalesOutput.append(temp);
+              }
+              
             //jbtnCalculateTotalPrice button is pressed.
             //method calculateTotalPrice() is called
             //total sales are added and printed out to text area.
-            else if (event.getSource() == jbtnCalculateTotalPrice) {
-                String temp = manageTicketSold.calculateTotalPrice();
+             if (event.getSource() == jbtnCalculateTotalSales) {
+                String temp = manageTicketSold.calculateTotalSales();
                 jtxtSalesOutput.append(temp);
 
             }
@@ -177,9 +260,9 @@ public class MovieTheater extends JFrame {
         //create object salesFrame which is type MovieTickets.
         MovieTheater salesFrame = new MovieTheater();
         // give the frame a title
-        salesFrame.setTitle("Riverview Theater Thicket Sales");
+        salesFrame.setTitle("Marcus Movie Theater Thicket and Snack Sales");
         //set the frame size
-        salesFrame.setSize(400, 400);
+        salesFrame.setSize(600, 900);
         // center the frame
         salesFrame.setLocationRelativeTo(null);
         //the frame closes when an 'X' button is clicked

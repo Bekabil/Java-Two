@@ -16,7 +16,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 //class Sales
-public class Sales {
+public abstract class Sales {
 
     //private data fields
     private String name;
@@ -57,6 +57,12 @@ public class Sales {
         //quantity is returned to caller.
         return quantity;
     }
+    
+  //method getQuantity() gets quantity and return
+    public double getPrice() {
+        //quantity is returned to caller.
+        return price;
+    }
 
     //method getSalesDate() returns sales date.
     public String getSalesDate() {
@@ -68,16 +74,5 @@ public class Sales {
         return dateFormat.format(date);
     }
 
-    //method toString returns sales information as string object
-    //method calculatePrice() is called to get total thicket sales
-    public String toString() {
-        //salesInfo is type string used to build string representation of sales
-        String salesInfo = "  Sales created and stored.";
-        salesInfo += "\nName: " + name +
-            "\nPrice: $" + price + "\nQuantity: " + quantity +
-            "\nTotal Sale: $" + calculatePrice() + "\n\n";
-        //sales information is returned.
-        return salesInfo;
-    }
 
 }
